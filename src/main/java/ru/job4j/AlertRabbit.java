@@ -62,7 +62,7 @@ public class AlertRabbit {
     public static class Rabbit implements Job {
         @Override
         public void execute(JobExecutionContext context) throws JobExecutionException {
-            System.out.println("_____________________Rabbit runs here ...");
+            System.out.println("____________________Rabbit runs here ...");
             List<Long> store = (List<Long>) context.getJobDetail().getJobDataMap().get("store");
             store.add(System.currentTimeMillis());
             Connection connection = (Connection) context.getJobDetail().getJobDataMap().get("connection");
