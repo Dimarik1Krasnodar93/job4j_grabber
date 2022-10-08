@@ -4,8 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d57ce352-f6ff-49e8-81b2-109267a7b778" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+    <list default="true" id="d57ce352-f6ff-49e8-81b2-109267a7b778" name="Changes" comment="2. Парсинг HTML страницы. [#260358]">
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/job4j/grabber/utils/DateTimeParser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/job4j/grabber/utils/HabrCareerDateTimeParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/job4j_grabber.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/job4j/grabber/HabrCareerParse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/job4j/grabber/HabrCareerParse.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -254,7 +258,21 @@
       <option name="project" value="LOCAL" />
       <updated>1665240816105</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="2. Парсинг HTML страницы. [#260358] 1800">
+      <created>1665241220453</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1665241220453</updated>
+    </task>
+    <task id="LOCAL-00023" summary="2. Парсинг HTML страницы. [#260358] 1801">
+      <created>1665241260035</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1665241260035</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -298,16 +316,13 @@
     <MESSAGE value="1.1. Job c параметрами [#260360 #349408] 08 10-1654" />
     <MESSAGE value="2. Парсинг HTML страницы. [#260358]" />
     <MESSAGE value="2. Парсинг HTML страницы. [#260358] 1752" />
-    <option name="LAST_COMMIT_MESSAGE" value="2. Парсинг HTML страницы. [#260358] 1752" />
+    <MESSAGE value="2. Парсинг HTML страницы. [#260358] 1800" />
+    <MESSAGE value="2. Парсинг HTML страницы. [#260358] 1801" />
+    <option name="LAST_COMMIT_MESSAGE" value="2. Парсинг HTML страницы. [#260358] 1801" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/ru/job4j/grabber/HabrCareerParse.java</url>
-          <line>26</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/ru/job4j/AlertRabbit.java</url>
           <line>70</line>
@@ -325,13 +340,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/ru/job4j/grabber/HabrCareerParse.java</url>
-          <line>20</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/ru/job4j/grabber/HabrCareerParse.java</url>
-          <line>30</line>
-          <option name="timeStamp" value="9" />
+          <line>35</line>
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
