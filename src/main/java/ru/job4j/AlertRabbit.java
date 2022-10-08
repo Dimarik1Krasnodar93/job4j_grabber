@@ -33,7 +33,7 @@ public class AlertRabbit {
                     .usingJobData(data)
                     .build();
             SimpleScheduleBuilder times = simpleSchedule()
-                    .withIntervalInSeconds(5)
+                    .withIntervalInSeconds(Integer.parseInt(properties.getProperty("rabbit.interval")))
                     .repeatForever();
             Trigger trigger = newTrigger()
                     .startNow()
@@ -68,7 +68,7 @@ public class AlertRabbit {
             Connection connection = (Connection) context.getJobDetail().getJobDataMap().get("connection");
             try (PreparedStatement pst = connection.prepareStatement("Insert into rabbit (created_date) values (?)")) {
                 pst.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
-                ResultSet rslSet = pst.executeQuery();
+                pst.execute();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
