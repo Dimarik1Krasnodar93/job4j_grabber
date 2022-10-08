@@ -54,7 +54,7 @@ public class AlertRabbit {
         try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
             properties.load(in);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            ex.printStackTrace();;
         }
         return properties;
     }
