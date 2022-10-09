@@ -107,7 +107,6 @@ public class HabrCareerParse implements Parse {
                 Element dateElement = row.select(".vacancy-card__date").first();
                 Element dateElement2 = dateElement.child(0);
                 String date2 = dateElement2.attr("datetime");
-                date2 = date2.substring(0, 19);
                 HabrCareerDateTimeParser dataParser = new HabrCareerDateTimeParser();
                 LocalDateTime ldt = dataParser.parse(date2);
                 System.out.printf("%s %s date %s %n Описание %n %s", vacancyName, link, date2, description);
