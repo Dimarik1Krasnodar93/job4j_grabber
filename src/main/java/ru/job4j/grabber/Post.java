@@ -7,6 +7,46 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Post {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
     private int id;
     private String title;
     private String link;
@@ -21,14 +61,18 @@ public class Post {
         this.created = created;
     }
 
+    public Post() {
+
+    }
+
     @Override
     public boolean equals(Object p) {
-        return id == ((Post) p).id;
+        return id == ((Post) p).id && link.equals(((Post) p).link);
     }
 
     @Override
     public int hashCode() {
-        return id;
+        return id * Integer.parseInt(link.substring(link.length() - 4, 4));
     }
 
     @Override
