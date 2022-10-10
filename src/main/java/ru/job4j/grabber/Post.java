@@ -7,6 +7,27 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Post {
+    private int id;
+    private String title;
+    private String link;
+    private String description;
+    private LocalDateTime created;
+
+    public Post(int id, String link, String title, String descripton, LocalDateTime created) {
+        this.id = id;
+        this.title = title;
+        this.link = link;
+        this.description = descripton;
+        this.created = created;
+    }
+
+    public Post(String link, String title, String descripton, LocalDateTime created) {
+        this.title = title;
+        this.link = link;
+        this.description = descripton;
+        this.created = created;
+    }
+
     public int getId() {
         return id;
     }
@@ -45,24 +66,6 @@ public class Post {
 
     public void setCreated(LocalDateTime created) {
         this.created = created;
-    }
-
-    private int id;
-    private String title;
-    private String link;
-    private String description;
-    private LocalDateTime created;
-
-    public Post(int id, String link, String title, String descripton, LocalDateTime created) {
-        this.id = id;
-        this.title = title;
-        this.link = link;
-        this.description = descripton;
-        this.created = created;
-    }
-
-    public Post() {
-
     }
 
     @Override
