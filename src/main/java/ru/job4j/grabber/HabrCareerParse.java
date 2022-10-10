@@ -72,7 +72,7 @@ public class HabrCareerParse implements Parse {
                 LocalDateTime ldt = dataParser.parse(date2);
                 listRes.add(new Post(link2, vacancyName, description, ldt));
             });
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
         return  listRes.size() > 0 ? listRes.get(0) : null;
