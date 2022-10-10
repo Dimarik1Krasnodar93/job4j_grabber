@@ -20,9 +20,13 @@ public class HabrCareerParse implements Parse {
 
     private static final String SOURCE_LINK = "https://career.habr.com";
 
+    private static final String PAGE_LINK = String.format("%s/vacancies/java_developer", SOURCE_LINK);
+
+    private static String linkPages = "https://career.habr.com/vacancies/java_developer?page=%d";
+
     private final DateTimeParser dateTimeParser;
 
-    private static final String PAGE_LINK = String.format("%s/vacancies/java_developer", SOURCE_LINK);
+    private final int countPages = 5;
 
     public HabrCareerParse(DateTimeParser dateTimeParser) {
         this.dateTimeParser = dateTimeParser;
@@ -43,7 +47,14 @@ public class HabrCareerParse implements Parse {
 
     public List<Post> list(String link) {
         List<Post> postList = new ArrayList<>();
-        String strLinkPages = "https://career.habr.com/vacancies/java_developer?page=%d";
+        for (int i = 1; i <= countPages; i++) {
+            postList.add(getPost(String.format(link, i)));
+        }
+        return postList;
+    }
+
+    private Post getPost(String link) {
+        List<Post> listRes = new ArrayList<>();
         try {
             Connection connection = Jsoup.connect(link);
             Document document = connection.get();
@@ -59,32 +70,18 @@ public class HabrCareerParse implements Parse {
                 String date2 = dateElement2.attr("datetime");
                 HabrCareerDateTimeParser dataParser = new HabrCareerDateTimeParser();
                 LocalDateTime ldt = dataParser.parse(date2);
-                Element titleCardActions = row.select(".vacancy-favorite-btn").first();
-                int id = Integer.parseInt(titleCardActions.attr("data-vacancy-favorite-for"));
-                postList.add(new Post(id, link2, vacancyName, description, ldt));
+                listRes.add(new Post(link2, vacancyName, description, ldt));
             });
-        } catch (IOException ex) {
+        } catch(IOException ex) {
             ex.printStackTrace();
         }
-        return postList;
-    }
-
-    private List<Post> parsePages(int count) {
-        List<Post> result = new ArrayList<>();
-        String strLinkPages = "https://career.habr.com/vacancies/java_developer?page=%d";
-        for (int i = 1; i <= count; i++) {
-            List<Post> resultTemp = list(String.format(strLinkPages, i));
-            for (Post post : resultTemp) {
-                result.add(post);
-            }
-        }
-        return result;
+        return  listRes.size() > 0 ? listRes.get(0) : null;
     }
 
     public static void main2HabrCareerParse() {
         HabrCareerDateTimeParser dataParser = new HabrCareerDateTimeParser();
         HabrCareerParse habrCareerParse = new HabrCareerParse(dataParser);
-        List<Post> res = habrCareerParse.parsePages(5);
+        List<Post> res = habrCareerParse.list(linkPages);
         for (Post post : res) {
             System.out.println(post);
         }
