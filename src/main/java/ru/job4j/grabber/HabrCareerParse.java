@@ -22,15 +22,14 @@ public class HabrCareerParse implements Parse {
 
     private static final String PAGE_LINK = String.format("%s/vacancies/java_developer", SOURCE_LINK);
 
+    private static final int COUNT_PAGES = 5;
+
     private static String linkPages = "https://career.habr.com/vacancies/java_developer?page=%d";
 
     private DateTimeParser dateTimeParser;
 
-    private static final int COUNT_PAGES = 5;
-
-    public HabrCareerParse() {
-        dateTimeParser = new HabrCareerDateTimeParser();
-    }
+    public HabrCareerParse(DateTimeParser dateTimeParser) {
+        this.dateTimeParser = dateTimeParser; }
 
     private static String retrieveDescription(String link) {
         String rslt = null;
@@ -41,6 +40,7 @@ public class HabrCareerParse implements Parse {
             rslt = row.text();
         } catch (IOException ex) {
             ex.printStackTrace();
+            throw new IllegalArgumentException();
         }
         return rslt;
     }
@@ -49,38 +49,36 @@ public class HabrCareerParse implements Parse {
     public List<Post> list(String link) {
         List<Post> postList = new ArrayList<>();
         for (int i = 1; i <= COUNT_PAGES; i++) {
-            postList.add(getPost(String.format(link, i)));
+            Connection connection = Jsoup.connect(String.format(link, i));
+            try {
+                Document document = connection.get();
+                Elements rows = document.select(".vacancy-card__inner");
+                for (Element row : rows) {
+                    postList.add(getPost(row));
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
         return postList;
     }
 
-    private Post getPost(String link) {
-        List<Post> listRes = new ArrayList<>();
-        try {
-            Connection connection = Jsoup.connect(link);
-            Document document = connection.get();
-            Elements rows = document.select(".vacancy-card__inner");
-            rows.forEach(row -> {
-                Element titleElement = row.select(".vacancy-card__title").first();
-                Element linkElement = titleElement.child(0);
-                String vacancyName = titleElement.text();
-                String link2 = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
-                String description = retrieveDescription(link2);
-                Element dateElement = row.select(".vacancy-card__date").first();
-                Element dateElement2 = dateElement.child(0);
-                String date2 = dateElement2.attr("datetime");
-                HabrCareerDateTimeParser dataParser = new HabrCareerDateTimeParser();
-                LocalDateTime ldt = dataParser.parse(date2);
-                listRes.add(new Post(link2, vacancyName, description, ldt));
-            });
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return  listRes.size() > 0 ? listRes.get(0) : null;
+    private Post getPost(Element row) {
+        Element titleElement = row.select(".vacancy-card__title").first();
+        Element linkElement = titleElement.child(0);
+        String vacancyName = titleElement.text();
+        String link2 = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
+        String description = retrieveDescription(link2);
+        Element dateElement = row.select(".vacancy-card__date").first();
+        Element dateElement2 = dateElement.child(0);
+        String date2 = dateElement2.attr("datetime");
+        LocalDateTime ldt = dateTimeParser.parse(date2);
+        return  new Post(link2, vacancyName, description, ldt);
     }
 
-    public static void main(String[] args) throws IOException {
-        HabrCareerParse habrCareerParse = new HabrCareerParse();
+    public static void main(String[] args) {
+        DateTimeParser dateTimeParser = new HabrCareerDateTimeParser();
+        HabrCareerParse habrCareerParse = new HabrCareerParse(dateTimeParser);
         List<Post> res = habrCareerParse.list(PAGE_LINK + "?page=%d");
         for (Post post : res) {
             System.out.println(post);
