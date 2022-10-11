@@ -32,7 +32,7 @@ public class HabrCareerParse implements Parse {
         this.dateTimeParser = dateTimeParser; }
 
     private static String retrieveDescription(String link) {
-        String rslt = null;
+        String rslt;
         try {
             Connection connection = Jsoup.connect(link);
             Document document = connection.get();
