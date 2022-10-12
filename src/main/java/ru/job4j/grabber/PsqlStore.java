@@ -27,7 +27,8 @@ public class PsqlStore implements Store, AutoCloseable {
 
     @Override
     public void save(Post post) {
-        try (PreparedStatement preparedStatement = cnn.prepareStatement("Insert into post (name, text, link, created) values (?, ?, ?, ?)",
+        try (PreparedStatement preparedStatement
+                     = cnn.prepareStatement("Insert  into post (name, text, link, created) values (?, ?, ?, ?) on conflict do nothing",
         Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, post.getTitle());
             preparedStatement.setString(2, post.getDescription());
@@ -68,7 +69,8 @@ public class PsqlStore implements Store, AutoCloseable {
     @Override
     public Post findById(int id) {
         Post rslt = null;
-        try (PreparedStatement preparedStatement = cnn.prepareStatement("select * from post where id = ?")) {
+        try (PreparedStatement preparedStatement
+                     = cnn.prepareStatement("select * from post where id = ?")) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -90,7 +92,8 @@ public class PsqlStore implements Store, AutoCloseable {
     public static void main(String[] args) {
         Properties properties = loadProperties();
         try (PsqlStore psqlstore = new PsqlStore(properties)) {
-            Post post1 = new Post("https://career.habr.com/vacancies/4106795073", "Руководитель проектов в Центр управления данными", "description", LocalDateTime.now());
+            Post post1 = new Post("https://career.habr.com/vacancies/4106795073",
+                    "Руководитель проектов в Центр управления данными", "description", LocalDateTime.now());
             psqlstore.save(post1);
             Post post2 = psqlstore.findById(post1.getId());
             List<Post> listpost = psqlstore.getAll();
