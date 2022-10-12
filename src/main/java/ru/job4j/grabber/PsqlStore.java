@@ -19,7 +19,7 @@ public class PsqlStore implements Store, AutoCloseable {
             throw new IllegalStateException(e);
         }
         try {
-            cnn = DriverManager.getConnection(cfg.get("url").toString());
+            cnn = DriverManager.getConnection(cfg.get("url").toString(), cfg.get("username").toString(), cfg.get("password").toString());
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -27,17 +27,28 @@ public class PsqlStore implements Store, AutoCloseable {
 
     @Override
     public void save(Post post) {
-        try (PreparedStatement preparedStatement = cnn.prepareStatement("Insert into post (name, text, link, created) values (?, ?, ?, ?)")) {
+        try (PreparedStatement preparedStatement = cnn.prepareStatement("Insert into post (name, text, link, created) values (?, ?, ?, ?)",
+        Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, post.getTitle());
             preparedStatement.setString(2, post.getDescription());
             preparedStatement.setString(3, post.getLink());
             preparedStatement.setTimestamp(4, Timestamp.valueOf(post.getCreated()));
             preparedStatement.execute();
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            post.setId(generatedKeys.getInt("id"));
+            if (generatedKeys.next()) {
+                post.setId(generatedKeys.getInt("id"));
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private Post getPostFromResultSet(ResultSet rslt) throws SQLException{
+        return new Post(rslt.getInt("id"),
+                rslt.getString("name"),
+                rslt.getString("link"),
+                rslt.getString("text"),
+                rslt.getTimestamp("created").toLocalDateTime());
     }
 
     @Override
@@ -46,11 +57,7 @@ public class PsqlStore implements Store, AutoCloseable {
         try (Statement st = cnn.createStatement()) {
             ResultSet rslt = st.executeQuery("select * from post");
             while (rslt.next()) {
-                listpost.add(new Post(rslt.getInt("id"),
-                        rslt.getString("title"),
-                        rslt.getString("link"),
-                        rslt.getString("description"),
-                        rslt.getTimestamp("created").toLocalDateTime()));
+                listpost.add(getPostFromResultSet(rslt));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -64,11 +71,9 @@ public class PsqlStore implements Store, AutoCloseable {
         try (PreparedStatement preparedStatement = cnn.prepareStatement("select * from post where id = ?")) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            rslt = new Post(resultSet.getInt("id"),
-                    resultSet.getString("title"),
-                    resultSet.getString("link"),
-                    resultSet.getString("description"),
-                    resultSet.getTimestamp("created").toLocalDateTime());
+            if (resultSet.next()) {
+                rslt = getPostFromResultSet(resultSet);
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -85,8 +90,10 @@ public class PsqlStore implements Store, AutoCloseable {
     public static void main(String[] args) {
         Properties properties = loadProperties();
         PsqlStore psqlstore = new PsqlStore(properties);
-        Post post1 = new Post("https://career.habr.com/vacancies/1000095970", "Руководитель проектов в Центр управления данными", "description", LocalDateTime.now());
+        Post post1 = new Post("https://career.habr.com/vacancies/4106795073", "Руководитель проектов в Центр управления данными", "description", LocalDateTime.now());
         psqlstore.save(post1);
+        Post post2 = psqlstore.findById(post1.getId());
+        List<Post> listpost = psqlstore.getAll();
     }
 
     private static Properties loadProperties() {
