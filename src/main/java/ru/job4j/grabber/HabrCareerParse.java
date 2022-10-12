@@ -24,8 +24,6 @@ public class HabrCareerParse implements Parse {
 
     private static final int COUNT_PAGES = 5;
 
-    private static String linkPages = "https://career.habr.com/vacancies/java_developer?page=%d";
-
     private DateTimeParser dateTimeParser;
 
     public HabrCareerParse(DateTimeParser dateTimeParser) {
@@ -58,6 +56,7 @@ public class HabrCareerParse implements Parse {
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
+                throw new IllegalArgumentException();
             }
         }
         return postList;
