@@ -17,7 +17,6 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 public class Grabber implements Grab {
     private final Properties cfg = new Properties();
-    private List<Post> listpost = new ArrayList<>();
 
     public Store store() {
         return new PsqlStore(cfg);
@@ -75,8 +74,7 @@ public class Grabber implements Grab {
 
     public static class GrabJob implements Job {
 
-        private static final String SOURCE_LINK = "https://career.habr.com";
-        private static final String PAGE_LINK = String.format("%s/vacancies/java_developer", SOURCE_LINK);
+        private static final String PAGE_LINK = "https://career.habr.com/vacancies/java_developer?page=%d";
 
         @Override
         public void execute(JobExecutionContext context) throws JobExecutionException {
