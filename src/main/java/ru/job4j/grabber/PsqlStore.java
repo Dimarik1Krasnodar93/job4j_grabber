@@ -22,7 +22,8 @@ public class PsqlStore implements Store, AutoCloseable {
             throw new IllegalStateException(e);
         }
         try {
-            cnn = DriverManager.getConnection(cfg.get("url").toString(), cfg.get("username").toString(), cfg.get("password").toString());
+            cnn = DriverManager.getConnection(cfg.get("url").toString(),
+                    cfg.get("username").toString(), cfg.get("password").toString());
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -31,7 +32,8 @@ public class PsqlStore implements Store, AutoCloseable {
     @Override
     public void save(Post post) {
         try (PreparedStatement preparedStatement
-                     = cnn.prepareStatement("Insert  into post (name, text, link, created) values (?, ?, ?, ?) on conflict do nothing",
+                     = cnn.prepareStatement("Insert  into post (name, text, link, created) "
+                        + "values (?, ?, ?, ?) on conflict do nothing",
         Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, post.getTitle());
             preparedStatement.setString(2, post.getDescription());
