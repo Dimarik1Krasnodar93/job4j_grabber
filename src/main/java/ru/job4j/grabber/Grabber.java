@@ -81,7 +81,7 @@ public class Grabber implements Grab {
             JobDataMap map = context.getJobDetail().getJobDataMap();
             Store store = (Store) map.get("store");
             Parse parse = (Parse) map.get("parse");
-            List<Post> listpost = parse.list(PAGE_LINK + "?page=%d");
+            List<Post> listpost = parse.list(PAGE_LINK);
             for (Post post : listpost) {
                 store.save(post);
             }
